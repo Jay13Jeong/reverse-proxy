@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+
+  nginx:
+    build: requirements/nginx/
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - "${HOME}/data/WordPress:/var/www/html"
+    depends_on:
+      - wordpress
+    networks:
+      - net1
+    restart: always
+
+  mariadb:
+    build: requirements/mariadb/
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "${HOME}/data/DB:/var/lib/mysql"
+    networks:
+      - net2
+    restart: always
+    environment:
+      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
+      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
+      WP_DATABASE_USR:  ${WP_DATABASE_USR}
+      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
+
+  wordpress:
+    image: wordpress:php8.1-fpm
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    volumes:
+      - "${HOME}/data/WordPress:/var/www/html"
+    depends_on:
+      - mariadb
+    networks:
+      - net1
+      - net2
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: ${MYSQL_HOST}
+      WORDPRESS_DB_NAME: ${WP_DATABASE_NAME}
+      WORDPRESS_DB_USER: ${WP_DATABASE_USR}
+      WORDPRESS_DB_PASSWORD: ${WP_DATABASE_PWD}
+
+networks:
+  net1:
+  net2:
