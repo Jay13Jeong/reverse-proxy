@@ -11,10 +11,10 @@ services:
       - net2
     restart: always
     environment:
-      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
-      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
-      WP_DATABASE_USR:  ${WP_DATABASE_USR}
-      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
+      MARIADB_ROOT_PASSWORD:   ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER:  ${MARIADB_USER}
+      MARIADB_PASSWORD:  ${MARIADB_PASSWORD}
     
 networks:
   net1:

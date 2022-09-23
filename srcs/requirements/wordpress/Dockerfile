@@ -58,19 +58,17 @@ RUN		apk update && \
 		
 
 # php config
-RUN	adduser -S nginx &&	addgroup -S nginx
+RUN	adduser --system nginx
+RUN addgroup --system nginx
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
 
 # static website
 COPY conf/index.html /tmp/index.html
 
-# install wordpress
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x wp-cli.phar
-RUN cp wp-cli.phar /usr/bin/wp
+RUN wget -O /usr/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x /usr/bin/wp
 
-# ?? why cded?
 WORKDIR /var/www/html/wordpress
 
 COPY tools/configure.sh /tmp/configure.sh
