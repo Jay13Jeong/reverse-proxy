@@ -20,7 +20,7 @@ wp plugin install redis-cache --activate --allow-root
 wp plugin update --all --allow-root
 wp redis enable --allow-root
 
-mv /tmp/index.html /var/www/html/index.html
+mv /resume/* /var/www/html
 
 wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-mysql-en.php -O /var/www/html/adminer.php
 

@@ -55,9 +55,11 @@ RUN		apk update && \
 		php7-zip			\
 		php7-zlib					
 
+
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 COPY tools/configure.sh /tmp/configure.sh
-COPY tools/index.html /tmp/index.html
+# COPY tools/index.html /tmp/index.html
+COPY tools/right-resume_free_1-2-0 /resume
 
 RUN wget -O /usr/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 RUN chmod +x /usr/bin/wp
