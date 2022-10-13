@@ -1,0 +1,7 @@
+[vsftpd]
+enabled = true
+port = ftp,ftp-data,ftps,ftps-data
+logpath = %(vsftpd_log)s
+findtime=30
+bantime = 7200
+maxretry = 10

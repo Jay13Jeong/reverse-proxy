@@ -5,9 +5,9 @@ RUN	apk update && \
         apk add nginx openssl
 
 # nginx SSL
-RUN mkdir /etc/nginx/ssl
+RUN mkdir -p /etc/ssl
 RUN openssl req -x509 \
--newkey rsa:2048 -nodes -out /etc/nginx/ssl/jjeong_ssl.pem -keyout /etc/nginx/ssl/jjeong_ssl.key \
+-newkey rsa:2048 -nodes -out /etc/ssl/jjeong_ssl.pem -keyout /etc/ssl/jjeong_ssl.key \
 -subj "/C=KR/ST=Seoul/L=Seoul/O=42Seoul/OU=jjeong42/CN=jjeong/"
 
 # nginx config

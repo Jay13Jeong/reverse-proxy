@@ -7,7 +7,6 @@ RUN		apk update && \
         tar                 \
 		mariadb-client		\
 		redis				\
-		# Wordpress core depencencies
 		php7				\
 		php7-fpm			\
 		php7-bcmath			\
@@ -55,21 +54,14 @@ RUN		apk update && \
 		php7-xsl			\
 		php7-zip			\
 		php7-zlib					
-		
 
-# php config
-RUN	adduser --system nginx
-RUN addgroup --system nginx
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
-COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
-
-# static website
-COPY conf/index.html /tmp/index.html
+COPY tools/configure.sh /tmp/configure.sh
+COPY tools/index.html /tmp/index.html
 
 RUN wget -O /usr/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 RUN chmod +x /usr/bin/wp
 
 WORKDIR /var/www/html/wordpress
 
-COPY tools/configure.sh /tmp/configure.sh
 ENTRYPOINT [ "sh", "/tmp/configure.sh" ]

@@ -17,13 +17,13 @@ services:
   wordpress:
     build: requirements/wordpress/
     container_name: wordpress
-    ports:
-      - "9000:9000"
+    expose:
+      - 9000
     volumes:
       - "${HOME}/data/WordPress:/var/www/html"
     depends_on:
       - mariadb
-      # - redis
+      - redis
     networks:
       - net1
       - net2
@@ -41,14 +41,12 @@ services:
       WP_USR:           ${WP_USR}
       WP_PWD:           ${WP_PWD}
       WP_EMAIL:         ${WP_EMAIL}
-      REDIS_HOST:       ${REDIS_HOST}
-      REDIS_PWD:        ${REDIS_PWD}
 
   mariadb:
     build: requirements/mariadb/
     container_name: mariadb
-    ports:
-      - "3306:3306"
+    expose:
+      - 3306
     volumes:
       - "${HOME}/data/DB:/var/lib/mysql"
     networks:
@@ -60,44 +58,28 @@ services:
       MARIADB_USER:  ${MARIADB_USER}
       MARIADB_PASSWORD:  ${MARIADB_PASSWORD}
     
-  # redis:
-  #   build: requirements/bonus/redis
-  #   container_name: redis
-  #   ports:
-  #     - "6379:6379"
-  #   networks:
-  #     - net2
-  #   restart: always
-  #   environment:
-  #     REDIS_PWD: ${REDIS_PWD}
+  redis:
+    build: requirements/bonus/redis
+    container_name: redis
+    expose:
+      - 6379
+    networks:
+      - net2
+    restart: always
 
-  # ftp-server:
-  #   build: requirements/bonus/ftp-server
-  #   container_name: ftp-server
-  #   ports:
-  #     - "21:21"
-  #     - "21100-21110:21100-21110"
-  #   volumes:
-  #     - "${HOME}/data/WordPress:/var/www/html"
-  #   networks:
-  #     - net2
-  #   restart: always
-  #   environment:
-  #     FTP_USR: ${FTP_USR}
-  #     FTP_PWD: ${FTP_PWD}
-
-  # portainer:
-  #   image: portainer/portainer-ce:latest
-  #   container_name: portainer
-  #   ports:
-  #     - "8000:8000"
-  #     - "9443:9443"
-  #   volumes:
-  #     - "/etc/localtime:/etc/localtime:ro"
-  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  #   security_opt:
-  #     - no-new-privileges:true
-  #   restart: always
+  ftp:
+    build: requirements/bonus/ftp
+    container_name: ftp
+    ports:
+      - "21:21"
+      - "50001:50001"
+    volumes:
+      - "${HOME}/data/WordPress:/var/ftp"
+    privileged: true
+    restart: always
+    environment:
+      FTP_USER: ${FTP_USER}
+      FTP_PASS: ${FTP_PASS}
 
 networks:
   net1:
