@@ -4,9 +4,6 @@ RUN		apk update && \
         apk upgrade && \
         apk add --no-cache \
 		wget				\
-        tar                 \
-		mariadb-client		\
-		redis				\
 		php7				\
 		php7-fpm			\
 		php7-bcmath			\
@@ -57,12 +54,6 @@ RUN		apk update && \
 
 
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
-COPY tools/configure.sh /tmp/configure.sh
-COPY tools/right-resume_free_1-2-0 /resume
+COPY tools/configure.sh /configure.sh
 
-RUN wget -O /usr/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x /usr/bin/wp
-
-WORKDIR /var/www/html/wordpress
-
-ENTRYPOINT [ "sh", "/tmp/configure.sh" ]
+ENTRYPOINT [ "sh", "/configure.sh" ]

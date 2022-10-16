@@ -12,4 +12,5 @@ CREATE USER '$MARIADB_USER'@'%' IDENTIFIED by '$MARIADB_PASSWORD';
 GRANT ALL PRIVILEGES ON $MARIADB_DATABASE.* TO '$MARIADB_USER'@'%';
 FLUSH PRIVILEGES;
 EOF
-exec mysqld --user=mysql --console
+# exec mysqld --user=mysql --console
+mysqld --user=mysql --console

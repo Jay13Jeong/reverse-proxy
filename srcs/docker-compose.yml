@@ -8,6 +8,7 @@ services:
       - "443:443"
     volumes:
       - "${HOME}/data/WordPress:/var/www/html"
+      # - "${HOME}/data/Adminer:/var/www/adminer"
     depends_on:
       - wordpress
     networks:
@@ -26,7 +27,6 @@ services:
       - redis
     networks:
       - net1
-      - net2
     restart: always
     environment:
       WORDPRESS_DB_HOST:       ${WORDPRESS_DB_HOST}
@@ -50,7 +50,7 @@ services:
     volumes:
       - "${HOME}/data/DB:/var/lib/mysql"
     networks:
-      - net2
+      - net1
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD:   ${MARIADB_ROOT_PASSWORD}
@@ -64,7 +64,7 @@ services:
     expose:
       - 6379
     networks:
-      - net2
+      - net1
     restart: always
 
   ftp:
@@ -81,6 +81,16 @@ services:
       FTP_USER: ${FTP_USER}
       FTP_PASS: ${FTP_PASS}
 
+  adminer:
+    build: requirements/bonus/adminer
+    container_name: adminer
+    expose:
+      - 8080
+    depends_on:
+      - mariadb
+    networks:
+      - net1
+    restart: always
+
 networks:
   net1:
-  net2:
