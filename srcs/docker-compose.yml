@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: requirements/nginx/
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - "${HOME}/data/WordPress:/var/www/html"
+    depends_on:
+      - wordpress
+    networks:
+      - net1
+    restart: always
+
+  wordpress:
+    build: requirements/wordpress/
+    container_name: wordpress
+    expose:
+      - 9000
+    volumes:
+      - "${HOME}/data/WordPress:/var/www/html"
+    depends_on:
+      - mariadb
+      - redis
+    networks:
+      - net1
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST:       ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_NAME: ${MARIADB_DATABASE}
+      MARIADB_USER:  ${MARIADB_USER}
+      MARIADB_PASSWORD:  ${MARIADB_PASSWORD}
+      DOMAIN_NAME:      ${DOMAIN_NAME}
+      WP_TITLE:         ${WP_TITLE}
+      WP_ADMIN_USR:     ${WP_ADMIN_USR}
+      WP_ADMIN_PWD:     ${WP_ADMIN_PWD}
+      WP_ADMIN_EMAIL:   ${WP_ADMIN_EMAIL}
+      WP_USR:           ${WP_USR}
+      WP_PWD:           ${WP_PWD}
+      WP_EMAIL:         ${WP_EMAIL}
+
+  mariadb:
+    build: requirements/mariadb/
+    container_name: mariadb
+    expose:
+      - 3306
+    volumes:
+      - "${HOME}/data/DB:/var/lib/mysql"
+    networks:
+      - net1
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD:   ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER:  ${MARIADB_USER}
+      MARIADB_PASSWORD:  ${MARIADB_PASSWORD}
+    
+  redis:
+    build: requirements/bonus/redis
+    container_name: redis
+    expose:
+      - 6379
+    networks:
+      - net1
+    restart: always
+
+  ftp:
+    build: requirements/bonus/ftp
+    container_name: ftp
+    ports:
+      - "21:21"
+      - "50001:50001"
+    volumes:
+      - "${HOME}/data/WordPress:/var/ftp"
+    privileged: true
+    restart: always
+    environment:
+      FTP_USER: ${FTP_USER}
+      FTP_PASS: ${FTP_PASS}
+
+  adminer:
+    build: requirements/bonus/adminer
+    container_name: adminer
+    expose:
+      - 8080
+    depends_on:
+      - mariadb
+    networks:
+      - net1
+    restart: always
+
+networks:
+  net1:
