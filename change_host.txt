@@ -1,1 +1,0 @@
-echo "127.0.0.1 jjeong.42.fr" >> /etc/hosts
